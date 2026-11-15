@@ -8,3 +8,4 @@ results/preds/
 results/*.log
 export/plant_prep.onnx
 .streamlit/secrets.toml
+build/

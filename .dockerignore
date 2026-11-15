@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+**/__pycache__
+data
+checkpoints
+notebooks
+docs
+tests
+deploy
+results/preds
+uv.lock
+*.log

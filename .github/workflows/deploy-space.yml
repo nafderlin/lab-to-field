@@ -1,0 +1,26 @@
+name: deploy to Hugging Face Space
+
+# Needs a repository secret HF_TOKEN (a Hugging Face write token) and a repository
+# variable HF_SPACE (e.g. "your-username/lab-to-field"). Without them this job is skipped.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: vars.HF_SPACE != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -U huggingface_hub
+      - run: scripts/build_space.sh build/space
+      - name: Upload to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: >
+          hf upload "${{ vars.HF_SPACE }}" build/space . --repo-type space
+          --delete "*" --commit-message "Deploy ${GITHUB_SHA::7} from GitHub"
