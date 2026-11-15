@@ -1,5 +1,6 @@
 """Shared paths, data loading and small UI helpers for every page."""
 import json
+import sys
 from pathlib import Path
 
 import altair as alt
@@ -7,6 +8,8 @@ import pandas as pd
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT / "src") not in sys.path:  # use lab_to_field without installing the (PyTorch-heavy) package
+    sys.path.insert(0, str(ROOT / "src"))
 EXPORT = ROOT / "export"
 FIGS = ROOT / "results" / "figures"
 RESULTS = ROOT / "results"

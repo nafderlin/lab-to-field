@@ -1,38 +1,17 @@
-import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import onnxruntime as ort
 import streamlit as st
 from PIL import Image
 
 from common import EXPORT, ROOT
-
-MEAN, STD = np.array([0.485, 0.456, 0.406]), np.array([0.229, 0.224, 0.225])
-
-
-@st.cache_resource
-def load_session(precision: str):
-    return ort.InferenceSession(str(EXPORT / f"plant_{precision}.onnx"), providers=["CPUExecutionProvider"])
+from lab_to_field.inference import MEAN, STD, LeafDiagnoser
 
 
 @st.cache_resource
-def load_meta():
-    return json.loads((EXPORT / "labels.json").read_text())
-
-
-def preprocess(img: Image.Image, size: int = 224):
-    """Same as training-time evaluation: resize shorter side to 255, center-crop 224, normalise."""
-    img = img.convert("RGB")
-    w, h = img.size
-    short = int(size * 1.14)  # same rounding as torchvision Resize(255) + CenterCrop(224)
-    new_w, new_h = (short, int(short * h / w)) if w <= h else (int(short * w / h), short)
-    img = img.resize((new_w, new_h), Image.BILINEAR)
-    left, top = int(round((new_w - size) / 2.0)), int(round((new_h - size) / 2.0))
-    img = img.crop((left, top, left + size, top + size))
-    x = (np.asarray(img, dtype=np.float32) / 255 - MEAN) / STD
-    return x.transpose(2, 0, 1)[None].astype(np.float32), img
+def load_model(precision: str) -> LeafDiagnoser:
+    return LeafDiagnoser(precision, EXPORT)
 
 
 def gradcam(img224: Image.Image):
@@ -56,16 +35,10 @@ def gradcam(img224: Image.Image):
     return show_cam_on_image(rgb, heat, use_rgb=True)
 
 
-def softmax(z):
-    e = np.exp(z - z.max())
-    return e / e.sum()
-
-
 def predict(img: Image.Image, precision: str, temperature: float | None = None):
     """Class probabilities for one photo, calibrated with the temperature unless one is given."""
-    x, img224 = preprocess(img)
-    logits = load_session(precision).run(None, {"image": x})[0][0]
-    return softmax(logits / (T if temperature is None else temperature)), img224
+    d = load_model(precision).diagnose(img, temperature)
+    return d.probs, d.image224
 
 
 def label_from_name(path: Path) -> str | None:
@@ -74,8 +47,8 @@ def label_from_name(path: Path) -> str | None:
     return next((c for c in classes if c.lower() == head.lower()), None)
 
 
-meta = load_meta()
-classes, T, threshold = meta["classes"], meta["temperature"], meta["abstain_threshold"]
+_model = load_model("fp16")
+classes, T, threshold = _model.classes, _model.temperature, _model.threshold
 TEST_DIR = ROOT / "test_images"
 FILE_INFO = {"fp32": "17 MB · 64.4% field acc.", "fp16": "8.5 MB · 64.4% field acc.", "int8": "4.7 MB · 60.6% field acc."}
 st.caption("MobileNetV3 trained to work on real field photos. Runs on a CPU from an 8.5 MB ONNX file and says “not sure” instead of guessing.")
