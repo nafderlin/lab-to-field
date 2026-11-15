@@ -11,3 +11,5 @@ deploy
 results/preds
 uv.lock
 *.log
+web
+build
