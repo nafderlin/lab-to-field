@@ -4,6 +4,7 @@
 
 **Crop disease detection that still works when you leave the lab.**
 
+[![tests](https://github.com/nafderlin/lab-to-field/actions/workflows/tests.yml/badge.svg)](https://github.com/nafderlin/lab-to-field/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2C5F2D.svg)](LICENSE)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-4F7CAC.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.7-D9822B.svg)
@@ -94,6 +95,21 @@ streamlit run app/streamlit_app.py
 
 Open **Diagnose a leaf** and upload a photo, or drop your own photos into [`test_images/`](test_images/).
 
+**From the command line or Python:**
+
+```bash
+PYTHONPATH=src python -m lab_to_field.cli test_images/ --json     # or `lab-to-field-predict` after `uv sync`
+```
+
+```python
+from lab_to_field.inference import LeafDiagnoser
+
+d = LeafDiagnoser("fp16").diagnose("leaf.jpg")
+print(d.answer, f"{d.confidence:.0%}")   # "Tomato late blight 93%", or "Not sure" below the calibrated threshold
+```
+
+**With Docker:** `docker build -t lab-to-field . && docker run -p 8501:8501 lab-to-field`
+
 **Reproduce everything from scratch** (NVIDIA GPU, about 1.5 h on an RTX 4050):
 
 ```bash
@@ -116,8 +132,11 @@ notebooks/
   04_augmentation           controlled augmentation ablation, background replacement
   05_training_choices       optimizers, losses, activations, calibration, abstention, final model
   06_explain_and_export     Grad-CAM, ONNX export, FP16 / INT8
-src/lab_to_field/           reusable code: config, data, models, train, metrics, calibrate, experiment
+src/lab_to_field/           training code (config, data, models, train, metrics, calibrate, experiment)
+                            + inference.py / cli.py: PyTorch-free ONNX inference used by the app and CLI
 app/                        Streamlit app: overview, step-by-step explanation pages, leaf diagnosis
+tests/                      inference tests, incl. a golden snapshot of model outputs (run: pytest)
+deploy/space/               Hugging Face Space card; scripts/build_space.sh assembles the Space
 export/                     trained ONNX models (FP32 / FP16 / INT8) + labels and calibration
 results/                    metrics (JSON) and figures
 test_images/                your own leaf photos to try in the app
