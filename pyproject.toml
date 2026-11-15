@@ -1,9 +1,11 @@
 [project]
 name = "lab-to-field"
 version = "0.1.0"
+readme = "README.md"
+license = "MIT"
 description = "Crop disease classification that holds up on real field photos, not just lab images"
 authors = [
-    { name = "MrMehulKhanna", email = "mehulkhanna277@gmail.com" }
+    { name = "Abu Bakr", email = "abu@bakr.uz" }
 ]
 requires-python = ">=3.12,<3.13"
 dependencies = [
