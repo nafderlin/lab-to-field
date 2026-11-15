@@ -10,6 +10,19 @@ phone-sized model (8.5 MB, runs offline on a CPU) with a Streamlit demo.
 
 ![Lab vs field photos](results/figures/01_lab_vs_field.png)
 
+## Why this exists
+
+We built a plant-disease vision model and it looked great: 90%+ accuracy on our test set. Then we pointed it at
+real leaves in a real field, and it fell apart. It was still confident, just wrong.
+
+The test set was made of lab photos (one leaf, plain background, perfect light), the same kind of photos it trained
+on. So the high score only proved it was good at lab photos. This project is what came out of digging into that failure:
+
+- **Measure** how big the lab-to-field gap really is, on a field test set the model never touches during development.
+- **Find out why** the gap exists (spoiler: lab backgrounds leak the answer).
+- **Close** as much of it as possible with transfer learning, targeted augmentation and a little real field data.
+- **Make the model honest**, so it says "not sure" instead of confidently guessing when a photo is outside what it knows.
+
 ## Key results
 
 | Model | Trained on | Lab accuracy | **Field accuracy** (95% CI) | Field ECE ↓ |
@@ -84,3 +97,18 @@ Saved results are reused: re-running a notebook reloads `results/<name>.json` in
 - Next (Group Project 2): distil DINOv2 into MobileNetV3, quantization-aware training for INT8, leaf detection/segmentation (Module 6), expert-labelled Punjab phone photos, Android app.
 
 Not a substitute for an agronomist.
+
+## Contributing
+
+Issues and pull requests are welcome, especially **field photos of crops PlantDoc doesn't cover** (wheat, rice, cotton)
+and results on other field datasets. If you test the model on your own leaf photos, open an issue with what worked and
+what didn't.
+
+## Author
+
+**Abu Bakr**
+
+## License
+
+Code is released under the [MIT License](LICENSE). The datasets and sample photos keep their own licenses (see
+[Data and licenses](#data-and-licenses)).
