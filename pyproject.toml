@@ -5,7 +5,9 @@ readme = "README.md"
 license = "MIT"
 description = "Crop disease classification that holds up on real field photos, not just lab images"
 authors = [
-    { name = "Abu Bakr", email = "abu@bakr.uz" }
+    { name = "Abubakr", email = "abu@bakr.uz" },
+    { name = "Mehul", email = "mehulkhanna277@gmail.com" },
+    { name = "Xiaodong Tan", email = "frances.tanx@gmail.com" },
 ]
 requires-python = ">=3.12,<3.13"
 dependencies = [
