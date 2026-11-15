@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab to Field · Leaf Check</title>
+  <meta name="description" content="Crop disease detection that runs in your browser and says “not sure” instead of guessing.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="wrap">
+    <div class="brand">🌿 Lab to Field</div>
+    <h1>Is this leaf sick?</h1>
+    <p class="lede">A crop-disease model trained to work on real field photos, not just lab pictures. It runs
+      <strong>entirely in your browser</strong>: your photo never leaves your device. And when it isn't sure, it says so.</p>
+  </header>
+
+  <main class="wrap grid">
+    <section class="card" aria-labelledby="pick-title">
+      <h2 id="pick-title">1 · Choose a leaf photo</h2>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/*" hidden>
+        <span class="drop-icon" aria-hidden="true">📷</span>
+        <span><strong>Upload or drop a photo</strong><br><small>or paste one · on a phone you can use the camera</small></span>
+      </label>
+      <p class="tip">Best results: one leaf filling the frame, in daylight, not blurry.</p>
+
+      <h3>…or try a field photo</h3>
+      <p class="muted small">Real photos taken outside the lab.</p>
+      <div class="samples" id="samples" role="list"></div>
+    </section>
+
+    <section class="card result" aria-labelledby="result-title" aria-live="polite">
+      <h2 id="result-title">2 · Diagnosis</h2>
+      <div id="status" class="status">Loading the model (8.5 MB)… <progress id="progress" max="1" value="0"></progress></div>
+
+      <div id="empty" class="empty" hidden>Pick a photo to see what the model thinks.</div>
+
+      <div id="output" hidden>
+        <div class="seen">
+          <canvas id="crop" width="224" height="224" aria-label="The part of the photo the model looked at"></canvas>
+          <div>
+            <div id="verdict" class="verdict"></div>
+            <div id="truth" class="muted small"></div>
+          </div>
+        </div>
+
+        <div class="meter" aria-hidden="true">
+          <div class="meter-fill" id="meter-fill"></div>
+          <div class="meter-mark" id="meter-mark"><span>“not sure” line</span></div>
+        </div>
+
+        <h3>Top guesses</h3>
+        <ol class="bars" id="bars"></ol>
+
+        <details>
+          <summary>How was this calculated?</summary>
+          <p id="details" class="small"></p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <section class="wrap how">
+    <h2>Why “not sure” matters</h2>
+    <div class="cols">
+      <div><strong>Lab ≠ field.</strong> Models trained on lab photos (plain background, perfect light) score ~99% in the
+        lab and as low as 9% on real farm photos, while still sounding confident.</div>
+      <div><strong>Trained for the field.</strong> This MobileNetV3 saw real field photos and backgrounds swapped during
+        training: 64% accuracy on unseen field photos, against 30% for the same model trained on lab photos only.</div>
+      <div><strong>Honest confidence.</strong> Its confidence is calibrated. Below the line it says “not sure”; on the
+        rest it is right 78% of the time.</div>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <p><a href="https://github.com/nafderlin/lab-to-field">Code, notebooks and full write-up on GitHub</a> · MIT license</p>
+    <p class="muted small">28 classes across 13 crops (apple, corn, grape, potato, tomato and more). No wheat, rice or
+      cotton yet. A research demo, not a substitute for an agronomist.</p>
+  </footer>
+</body>
+</html>
