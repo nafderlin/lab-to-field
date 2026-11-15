@@ -11,7 +11,7 @@
 ![ONNX 8.5 MB](https://img.shields.io/badge/ONNX_model-8.5_MB-97BC62.svg)
 ![Runs on CPU](https://img.shields.io/badge/runs_offline-CPU-7A8577.svg)
 
-**Live demo:** coming soon
+**Live demo:** coming soon · runs entirely in your browser, nothing is uploaded
 
 </div>
 
@@ -86,7 +86,16 @@ never to choose settings. INT8 shrinks the model to 4.7 MB but costs 3.8 points;
 
 ## 🚀 Quick start
 
-**Just try the model.** The trained ONNX models are in `export/`, so you don't need PyTorch, a GPU or any training:
+**In the browser.** The demo in [`web/`](web/) runs the 8.5 MB model on your device with
+[ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/). There's no server, so photos never leave the phone or laptop.
+It re-implements Pillow's resize in JavaScript, so it gives the same answers as Python (checked in CI on every bundled photo).
+
+```bash
+scripts/build_space.sh && python -m http.server -d build/space 8000     # then open http://localhost:8000
+```
+
+**The full app** (explanation pages + diagnosis). The trained ONNX models are in `export/`, so you don't need PyTorch,
+a GPU or any training:
 
 ```bash
 pip install -r app/requirements.txt     # streamlit, onnxruntime, numpy, pillow
@@ -135,8 +144,9 @@ notebooks/
 src/lab_to_field/           training code (config, data, models, train, metrics, calibrate, experiment)
                             + inference.py / cli.py: PyTorch-free ONNX inference used by the app and CLI
 app/                        Streamlit app: overview, step-by-step explanation pages, leaf diagnosis
+web/                        in-browser demo (ONNX Runtime Web); web/test checks it against Python
 tests/                      inference tests, incl. a golden snapshot of model outputs (run: pytest)
-deploy/space/               Hugging Face Space card; scripts/build_space.sh assembles the Space
+deploy/space/               Hugging Face Space card; scripts/build_space.sh builds the static Space
 export/                     trained ONNX models (FP32 / FP16 / INT8) + labels and calibration
 results/                    metrics (JSON) and figures
 test_images/                your own leaf photos to try in the app
