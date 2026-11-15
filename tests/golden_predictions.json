@@ -1,0 +1,226 @@
+{
+ "fp16": {
+  "app/samples/Apple cedar rust (02.-Rust-201).jpg": {
+   "answer": "Not sure",
+   "best_guess": "Apple scab",
+   "confidence": 0.4303
+  },
+  "app/samples/Apple healthy (4120978-sing).jpg": {
+   "answer": "Apple healthy",
+   "best_guess": "Apple healthy",
+   "confidence": 0.8094
+  },
+  "app/samples/Bell pepper healthy (pepper_leaf).jpg": {
+   "answer": "Bell pepper healthy",
+   "best_guess": "Bell pepper healthy",
+   "confidence": 0.8428
+  },
+  "app/samples/Corn gray leaf spot (show_picture).jpg": {
+   "answer": "Corn gray leaf spot",
+   "best_guess": "Corn gray leaf spot",
+   "confidence": 0.7978
+  },
+  "app/samples/Corn gray leaf spot (strom5).jpg": {
+   "answer": "Corn leaf blight",
+   "best_guess": "Corn leaf blight",
+   "confidence": 0.9161
+  },
+  "app/samples/Tomato early blight (Shoemaker_70).jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato bacterial spot",
+   "confidence": 0.3919
+  },
+  "app/samples/Tomato mosaic virus (toma_TMV).jpg": {
+   "answer": "Tomato mosaic virus",
+   "best_guess": "Tomato mosaic virus",
+   "confidence": 0.8723
+  },
+  "test_images/Apple healthy - field photo 13.jpg": {
+   "answer": "Apple healthy",
+   "best_guess": "Apple healthy",
+   "confidence": 0.9183
+  },
+  "test_images/Blueberry healthy - field photo 09.jpg": {
+   "answer": "Blueberry healthy",
+   "best_guess": "Blueberry healthy",
+   "confidence": 0.6024
+  },
+  "test_images/Cherry healthy - field photo 08.jpg": {
+   "answer": "Apple healthy",
+   "best_guess": "Apple healthy",
+   "confidence": 0.6083
+  },
+  "test_images/Corn gray leaf spot - field photo 14.jpg": {
+   "answer": "Corn leaf blight",
+   "best_guess": "Corn leaf blight",
+   "confidence": 0.9408
+  },
+  "test_images/Grape healthy - field photo 04.jpg": {
+   "answer": "Grape healthy",
+   "best_guess": "Grape healthy",
+   "confidence": 0.9844
+  },
+  "test_images/Soybean healthy - field photo 01.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Potato late blight",
+   "confidence": 0.1775
+  },
+  "test_images/Squash powdery mildew - field photo 11.jpg": {
+   "answer": "Squash powdery mildew",
+   "best_guess": "Squash powdery mildew",
+   "confidence": 0.9256
+  },
+  "test_images/Strawberry healthy - field photo 06.jpg": {
+   "answer": "Strawberry healthy",
+   "best_guess": "Strawberry healthy",
+   "confidence": 0.8465
+  },
+  "test_images/Tomato early blight - field photo 02.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato early blight",
+   "confidence": 0.4343
+  },
+  "test_images/Tomato healthy - field photo 05.jpg": {
+   "answer": "Tomato healthy",
+   "best_guess": "Tomato healthy",
+   "confidence": 0.6305
+  },
+  "test_images/Tomato late blight - field photo 12.jpg": {
+   "answer": "Tomato late blight",
+   "best_guess": "Tomato late blight",
+   "confidence": 0.9341
+  },
+  "test_images/Tomato leaf mold - field photo 03.jpg": {
+   "answer": "Tomato leaf mold",
+   "best_guess": "Tomato leaf mold",
+   "confidence": 0.7818
+  },
+  "test_images/Tomato mosaic virus - example.jpg": {
+   "answer": "Tomato mosaic virus",
+   "best_guess": "Tomato mosaic virus",
+   "confidence": 0.8723
+  },
+  "test_images/Tomato mosaic virus - field photo 10.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato leaf mold",
+   "confidence": 0.5433
+  },
+  "test_images/Tomato septoria spot - field photo 07.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato bacterial spot",
+   "confidence": 0.4787
+  }
+ },
+ "int8": {
+  "app/samples/Apple cedar rust (02.-Rust-201).jpg": {
+   "answer": "Not sure",
+   "best_guess": "Apple scab",
+   "confidence": 0.3838
+  },
+  "app/samples/Apple healthy (4120978-sing).jpg": {
+   "answer": "Apple healthy",
+   "best_guess": "Apple healthy",
+   "confidence": 0.9124
+  },
+  "app/samples/Bell pepper healthy (pepper_leaf).jpg": {
+   "answer": "Not sure",
+   "best_guess": "Bell pepper healthy",
+   "confidence": 0.2354
+  },
+  "app/samples/Corn gray leaf spot (show_picture).jpg": {
+   "answer": "Corn gray leaf spot",
+   "best_guess": "Corn gray leaf spot",
+   "confidence": 0.9327
+  },
+  "app/samples/Corn gray leaf spot (strom5).jpg": {
+   "answer": "Corn leaf blight",
+   "best_guess": "Corn leaf blight",
+   "confidence": 0.859
+  },
+  "app/samples/Tomato early blight (Shoemaker_70).jpg": {
+   "answer": "Tomato early blight",
+   "best_guess": "Tomato early blight",
+   "confidence": 0.8961
+  },
+  "app/samples/Tomato mosaic virus (toma_TMV).jpg": {
+   "answer": "Tomato mosaic virus",
+   "best_guess": "Tomato mosaic virus",
+   "confidence": 0.9491
+  },
+  "test_images/Apple healthy - field photo 13.jpg": {
+   "answer": "Apple healthy",
+   "best_guess": "Apple healthy",
+   "confidence": 0.9502
+  },
+  "test_images/Blueberry healthy - field photo 09.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Apple healthy",
+   "confidence": 0.2901
+  },
+  "test_images/Cherry healthy - field photo 08.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Apple healthy",
+   "confidence": 0.3498
+  },
+  "test_images/Corn gray leaf spot - field photo 14.jpg": {
+   "answer": "Corn leaf blight",
+   "best_guess": "Corn leaf blight",
+   "confidence": 0.8269
+  },
+  "test_images/Grape healthy - field photo 04.jpg": {
+   "answer": "Grape healthy",
+   "best_guess": "Grape healthy",
+   "confidence": 0.9843
+  },
+  "test_images/Soybean healthy - field photo 01.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Apple healthy",
+   "confidence": 0.3798
+  },
+  "test_images/Squash powdery mildew - field photo 11.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Squash powdery mildew",
+   "confidence": 0.5422
+  },
+  "test_images/Strawberry healthy - field photo 06.jpg": {
+   "answer": "Strawberry healthy",
+   "best_guess": "Strawberry healthy",
+   "confidence": 0.9031
+  },
+  "test_images/Tomato early blight - field photo 02.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato early blight",
+   "confidence": 0.3383
+  },
+  "test_images/Tomato healthy - field photo 05.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Raspberry healthy",
+   "confidence": 0.5238
+  },
+  "test_images/Tomato late blight - field photo 12.jpg": {
+   "answer": "Tomato late blight",
+   "best_guess": "Tomato late blight",
+   "confidence": 0.9254
+  },
+  "test_images/Tomato leaf mold - field photo 03.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Tomato leaf mold",
+   "confidence": 0.421
+  },
+  "test_images/Tomato mosaic virus - example.jpg": {
+   "answer": "Tomato mosaic virus",
+   "best_guess": "Tomato mosaic virus",
+   "confidence": 0.9491
+  },
+  "test_images/Tomato mosaic virus - field photo 10.jpg": {
+   "answer": "Not sure",
+   "best_guess": "Corn gray leaf spot",
+   "confidence": 0.356
+  },
+  "test_images/Tomato septoria spot - field photo 07.jpg": {
+   "answer": "Tomato septoria spot",
+   "best_guess": "Tomato septoria spot",
+   "confidence": 0.6607
+  }
+ }
+}
