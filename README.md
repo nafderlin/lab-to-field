@@ -11,7 +11,7 @@
 ![ONNX 8.5 MB](https://img.shields.io/badge/ONNX_model-8.5_MB-97BC62.svg)
 ![Runs on CPU](https://img.shields.io/badge/runs_offline-CPU-7A8577.svg)
 
-**Live demo:** coming soon · runs entirely in your browser, nothing is uploaded
+**[Live demo](https://huggingface.co/spaces/nafderlin/lab-to-field)** · runs entirely in your browser, nothing is uploaded
 
 </div>
 
