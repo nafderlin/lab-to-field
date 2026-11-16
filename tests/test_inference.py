@@ -87,6 +87,11 @@ def test_rejects_unknown_precision():
         LeafDiagnoser("fp8")
 
 
+# ONNX Runtime's INT8 kernels round differently on x86 and ARM CPUs: confidences move by up to ~2.3 points
+# between an Apple Silicon Mac and the Linux CI runner (FP16: 0.03 points), but no answer changes.
+TOLERANCE = {"fp16": 2e-3, "int8": 5e-2}
+
+
 @pytest.mark.parametrize("precision", ["fp16", "int8"])
 def test_predictions_match_golden_snapshot(precision):
     """Any change to preprocessing, calibration or the model files must be deliberate."""
@@ -95,7 +100,7 @@ def test_predictions_match_golden_snapshot(precision):
         d = model.diagnose(ROOT / rel)
         assert d.best_guess == expected["best_guess"], rel
         assert d.answer == expected["answer"], rel
-        assert d.confidence == pytest.approx(expected["confidence"], abs=2e-3), rel
+        assert d.confidence == pytest.approx(expected["confidence"], abs=TOLERANCE[precision]), rel
 
 
 def test_fp16_matches_fp32(fp16):

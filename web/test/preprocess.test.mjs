@@ -1,5 +1,5 @@
 // Checks web/preprocess.js against the Python pipeline on every bundled photo.
-// Run: PYTHONPATH=src python web/test/make_fixtures.py build/web-fixtures && node --test web/test/
+// Run: PYTHONPATH=src python web/test/make_fixtures.py build/web-fixtures && node --test "web/test/*.test.mjs"
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
