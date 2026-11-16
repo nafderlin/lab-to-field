@@ -75,31 +75,51 @@ function drawCrop(rgb) {
 
 const pct = (p) => `${(100 * p).toFixed(p < 0.1 ? 1 : 0)}%`;
 
+const ICONS = {
+  sure: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+  unsure: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+};
+
+/** Status pill in the bar above the panels: loading (orange), ready (green), failed (rust). */
+function setState(text, colour) {
+  $("hud-state").innerHTML = `<span class="dot dot-${colour}"></span>`;
+  $("hud-state").append(text);
+}
+
 function render(d, { ms, trueLabel }) {
   $("empty").hidden = true;
   $("output").hidden = false;
 
+  $("verdict-kicker").textContent = d.sure ? "Diagnosis" : "Not sure";
   const verdict = $("verdict");
   verdict.className = `verdict ${d.sure ? "sure" : "unsure"}`;
-  verdict.innerHTML = "";
-  verdict.append(d.sure ? d.answer : "Not sure");
-  const conf = document.createElement("span");
-  conf.className = "conf";
-  conf.textContent = d.sure ? `${pct(d.confidence)} confident` : `Best guess: ${d.bestGuess} (${pct(d.confidence)})`;
-  verdict.append(conf);
-  document.querySelector(".advice")?.remove();
-  if (!d.sure) {
-    const tip = document.createElement("div");
-    tip.className = "advice";
-    tip.textContent = "Try a closer, sharper photo of a single leaf in daylight, or ask a local agriculture officer.";
-    verdict.after(tip);
-  }
+  verdict.innerHTML = d.sure ? ICONS.sure : ICONS.unsure;
+  verdict.append(d.sure ? d.answer : `Maybe ${d.bestGuess}`);
 
   const truth = $("truth");
+  truth.className = trueLabel ? "truth" : "";
+  truth.replaceChildren();
   if (trueLabel) {
-    const mark = !d.sure ? "it chose not to answer" : d.answer === trueLabel ? "✓ correct" : "✗ wrong";
-    truth.textContent = `Actual: ${trueLabel} · ${mark}`;
-  } else truth.textContent = "";
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = !d.sure ? "Abstained" : d.answer === trueLabel ? "Matches label" : "Differs from label";
+    truth.append(tag, `Labelled: ${trueLabel}`);
+  }
+
+  document.querySelector(".advice")?.remove();
+  if (!d.sure) {
+    const tip = document.createElement("p");
+    tip.className = "advice";
+    tip.innerHTML = "<strong>Closest match, not a diagnosis.</strong> ";
+    tip.append("Its confidence is below the line where it is usually right. Try a closer, sharper photo of a " +
+      "single leaf in daylight, or ask a local agriculture officer.");
+    $("output").querySelector(".seen").after(tip);
+  }
+
+  $("fact-conf").textContent = pct(d.confidence);
+  $("fact-threshold").textContent = pct(d.threshold);
+  $("fact-ms").textContent = `${ms.toFixed(0)} ms`;
+  $("hud-ms").textContent = `${ms.toFixed(0)} ms`;
 
   $("meter-fill").style.width = pct(d.confidence);
   $("meter-fill").classList.toggle("unsure", !d.sure);
@@ -107,7 +127,7 @@ function render(d, { ms, trueLabel }) {
 
   $("bars").replaceChildren(...d.top.map(({ label, prob }) => {
     const li = document.createElement("li");
-    li.innerHTML = `<span></span><span></span><div class="track"><div class="fill"></div></div>`;
+    li.innerHTML = `<span></span><span class="pct"></span><div class="track"><div class="fill"></div></div>`;
     li.children[0].textContent = label;
     li.children[1].textContent = pct(prob);
     li.querySelector(".fill").style.width = pct(prob);
@@ -136,7 +156,7 @@ async function run(blob, trueLabel = null) {
     render(d, { ms, trueLabel });
     setStatus(null);
     document.body.dataset.lastAnswer = d.answer; // used by the browser smoke test
-    if (matchMedia("(max-width: 760px)").matches) $("result-title").scrollIntoView({ behavior: "smooth" });
+    if (matchMedia("(max-width: 1023px)").matches) $("result-title").scrollIntoView({ behavior: "smooth" });
   } catch (err) {
     console.error(err);
     setStatus("Couldn't read that image. Try a JPG or PNG photo.", { error: true });
@@ -187,9 +207,11 @@ loadSamples();
 try {
   await loadModel();
   setStatus(null);
+  setState("Ready", "green");
   $("empty").hidden = false;
   document.body.dataset.ready = "true";
 } catch (err) {
   console.error(err);
   setStatus("The model couldn't load. Check your connection and reload the page.", { error: true });
+  setState("Failed", "rust");
 }

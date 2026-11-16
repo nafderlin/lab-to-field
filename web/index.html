@@ -5,81 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lab to Field · Leaf Check</title>
   <meta name="description" content="Crop disease detection that runs in your browser and says “not sure” instead of guessing.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23336e5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/><path d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
   <script type="module" src="app.js"></script>
 </head>
 <body>
-  <header class="wrap">
-    <div class="brand">🌿 Lab to Field</div>
-    <h1>Is this leaf sick?</h1>
-    <p class="lede">A crop-disease model trained to work on real field photos, not just lab pictures. It runs
-      <strong>entirely in your browser</strong>: your photo never leaves your device. And when it isn't sure, it says so.</p>
+  <header class="gutter topbar">
+    <span class="wordmark">Lab to Field</span>
+    <a class="text-link" href="https://github.com/nafderlin/lab-to-field">GitHub</a>
   </header>
 
-  <main class="wrap grid">
-    <section class="card" aria-labelledby="pick-title">
-      <h2 id="pick-title">1 · Choose a leaf photo</h2>
-      <label class="drop" id="drop">
-        <input type="file" id="file" accept="image/*" hidden>
-        <span class="drop-icon" aria-hidden="true">📷</span>
-        <span><strong>Upload or drop a photo</strong><br><small>or paste one · on a phone you can use the camera</small></span>
-      </label>
-      <p class="tip">Best results: one leaf filling the frame, in daylight, not blurry.</p>
-
-      <h3>…or try a field photo</h3>
-      <p class="muted small">Real photos taken outside the lab.</p>
-      <div class="samples" id="samples" role="list"></div>
+  <main>
+    <section class="gutter hero">
+      <p class="mono-label"><span class="dot dot-rust" aria-hidden="true"></span>Browser AI · nothing is uploaded</p>
+      <h1>Is this leaf sick?<br><span class="green">Ask a model that admits doubt.</span></h1>
+      <p class="lead">A crop-disease model trained to hold up on real field photos, not just lab pictures. It runs
+        entirely on your device, and when a photo is outside what it knows, it says “not sure” instead of guessing.</p>
     </section>
 
-    <section class="card result" aria-labelledby="result-title" aria-live="polite">
-      <h2 id="result-title">2 · Diagnosis</h2>
-      <div id="status" class="status">Loading the model (8.5 MB)… <progress id="progress" max="1" value="0"></progress></div>
+    <div class="gutter">
+      <dl class="hud" aria-label="Model status">
+        <div><dt>Model</dt><dd>MobileNetV3</dd></div>
+        <div><dt>Runtime</dt><dd>onnxruntime-web</dd></div>
+        <div><dt>Size</dt><dd>8.5 MB · FP16</dd></div>
+        <div><dt>Classes</dt><dd>28 · 13 crops</dd></div>
+        <div><dt>Last run</dt><dd id="hud-ms">–</dd></div>
+        <div class="hud-state"><span class="pill" id="hud-state"><span class="dot dot-orange"></span>Loading</span></div>
+      </dl>
+    </div>
 
-      <div id="empty" class="empty" hidden>Pick a photo to see what the model thinks.</div>
+    <div class="gutter panels">
+      <section class="frame technical-frame" aria-labelledby="pick-title">
+        <div class="frame-head"><p class="kicker">01 / Input</p><span class="tag">On-device</span></div>
+        <h2 id="pick-title">Choose a leaf photo</h2>
 
-      <div id="output" hidden>
-        <div class="seen">
-          <canvas id="crop" width="224" height="224" aria-label="The part of the photo the model looked at"></canvas>
-          <div>
-            <div id="verdict" class="verdict"></div>
-            <div id="truth" class="muted small"></div>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="image/*" hidden>
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          </span>
+          <span class="drop-title">Upload or drop a photo</span>
+          <span class="meta">Or paste one. On a phone you can use the camera.</span>
+          <span class="button">Choose photo</span>
+        </label>
+        <p class="meta">Best results: one leaf filling the frame, in daylight, not blurry.</p>
+
+        <div class="frame-head sub"><p class="kicker">Field photos</p><span class="meta">Real photos taken outside the lab</span></div>
+        <div class="samples" id="samples" role="list"></div>
+      </section>
+
+      <section class="frame technical-frame" aria-labelledby="result-title" aria-live="polite">
+        <div class="frame-head"><p class="kicker">02 / Result</p><span class="tag">Calibrated</span></div>
+        <h2 id="result-title" class="visually-hidden">Diagnosis</h2>
+        <div id="status" class="status">Loading the model (8.5 MB)… <progress id="progress" max="1" value="0"></progress></div>
+
+        <ol class="steps" id="empty" hidden>
+          <li><span>01</span>Pick a field photo or upload your own.</li>
+          <li><span>02</span>The model looks at the center square of the photo, on your device.</li>
+          <li><span>03</span>It names the disease, or says “not sure” when its confidence is below the line.</li>
+        </ol>
+
+        <div id="output" hidden>
+          <div class="seen">
+            <canvas id="crop" width="224" height="224" aria-label="The part of the photo the model looked at"></canvas>
+            <div class="seen-text">
+              <p class="kicker" id="verdict-kicker">Diagnosis</p>
+              <div id="verdict" class="verdict"></div>
+              <div id="truth"></div>
+            </div>
           </div>
+
+          <dl class="facts">
+            <div><dt>Confidence</dt><dd id="fact-conf">–</dd></div>
+            <div><dt>“Not sure” below</dt><dd id="fact-threshold">–</dd></div>
+            <div><dt>Time</dt><dd id="fact-ms">–</dd></div>
+          </dl>
+
+          <div class="meter" aria-hidden="true">
+            <div class="meter-fill" id="meter-fill"></div>
+            <div class="meter-mark" id="meter-mark"></div>
+          </div>
+
+          <p class="kicker">Top guesses</p>
+          <ol class="bars" id="bars"></ol>
+
+          <details>
+            <summary>How was this calculated?</summary>
+            <p id="details" class="meta"></p>
+          </details>
         </div>
+      </section>
+    </div>
 
-        <div class="meter" aria-hidden="true">
-          <div class="meter-fill" id="meter-fill"></div>
-          <div class="meter-mark" id="meter-mark"><span>“not sure” line</span></div>
-        </div>
+    <div class="rule-double" aria-hidden="true"></div>
 
-        <h3>Top guesses</h3>
-        <ol class="bars" id="bars"></ol>
-
-        <details>
-          <summary>How was this calculated?</summary>
-          <p id="details" class="small"></p>
-        </details>
-      </div>
+    <section class="gutter why">
+      <p class="mono-label">The lab-to-field gap</p>
+      <h2 class="section-title">Why “not sure” matters</h2>
+      <p class="lead">Models trained on lab photos (one leaf, plain background, perfect light) score about 99% in the
+        lab and fall apart on real farm photos, while still sounding confident. This model was trained for the field and
+        calibrated so its confidence means something.</p>
+      <dl class="numbers">
+        <div><dt>8.9<span>%</span></dt><dd>a lab-trained CNN on field photos, 78% confident on average</dd></div>
+        <div><dt>64.4<span>%</span></dt><dd>this model on unseen field photos (30% for the same model trained on lab photos only)</dd></div>
+        <div><dt>77.8<span>%</span></dt><dd>accuracy when it answers; it says “not sure” on the other 29%</dd></div>
+        <div><dt>8.5<span>MB</span></dt><dd>the whole model, running in this tab on your CPU</dd></div>
+      </dl>
     </section>
   </main>
 
-  <section class="wrap how">
-    <h2>Why “not sure” matters</h2>
-    <div class="cols">
-      <div><strong>Lab ≠ field.</strong> Models trained on lab photos (plain background, perfect light) score ~99% in the
-        lab and as low as 9% on real farm photos, while still sounding confident.</div>
-      <div><strong>Trained for the field.</strong> This MobileNetV3 saw real field photos and backgrounds swapped during
-        training: 64% accuracy on unseen field photos, against 30% for the same model trained on lab photos only.</div>
-      <div><strong>Honest confidence.</strong> Its confidence is calibrated. Below the line it says “not sure”; on the
-        rest it is right 78% of the time.</div>
+  <footer class="footer">
+    <div class="gutter footer-inner">
+      <div>
+        <p class="footer-mark">Lab to Field</p>
+        <p class="footer-text">Crop disease detection that works outside the lab. 28 classes across 13 crops (apple, corn,
+          grape, potato, tomato and more); no wheat, rice or cotton yet.</p>
+      </div>
+      <div class="footer-links">
+        <p class="footer-label">Project</p>
+        <a href="https://github.com/nafderlin/lab-to-field">Code and notebooks</a>
+        <a href="https://github.com/nafderlin/lab-to-field#-results-at-a-glance">Results</a>
+      </div>
     </div>
-  </section>
-
-  <footer class="wrap">
-    <p><a href="https://github.com/nafderlin/lab-to-field">Code, notebooks and full write-up on GitHub</a> · MIT license</p>
-    <p class="muted small">28 classes across 13 crops (apple, corn, grape, potato, tomato and more). No wheat, rice or
-      cotton yet. A research demo, not a substitute for an agronomist.</p>
+    <p class="gutter footer-fine">MIT license · A research demo, not a substitute for an agronomist.</p>
   </footer>
 </body>
 </html>
